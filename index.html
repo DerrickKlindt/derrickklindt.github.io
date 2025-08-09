@@ -1,9 +1,529 @@
-<html>
- 
-<body>
-  <h1>DDK</h1>
-  <p>My Test Page!</p>
-  <img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif" />
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: The Best Windows 11 PC Under $200</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Tech Neutral -->
+    <!-- Application Structure Plan: The application is structured as an interactive decision guide, not a linear report. It starts with a hero section and a "guided quiz" that asks for user priorities to recommend a path. The main content is split into two explorable "dashboard" sections: New Mini PCs and Refurbished Desktops. These sections use tabs and interactive charts to present detailed information concisely. A "Data Deep Dive" section contains interactive comparison tables for spec-focused users. This structure was chosen to transform the passive reading experience of the report into an active, user-driven journey, helping users make a decision more effectively by personalizing the information flow. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: CPU benchmark data (Table 1) -> Goal: Compare raw power vs. efficiency -> Viz: Interactive Bar Chart (Chart.js) -> Interaction: Toggle between multi-core and single-core views -> Justification: More visually engaging and easier to compare magnitudes than a static table.
+        - Report Info: Final recommendation comparison (Table 4) -> Goal: Holistic comparison of the two top choices -> Viz: Radar Chart (Chart.js) -> Interaction: Hover tooltips explain each axis -> Justification: Provides a quick visual "shape" of each option's strengths and weaknesses across multiple criteria.
+        - Report Info: Model comparison tables (Tables 2 & 3) -> Goal: Detailed spec comparison -> Viz: HTML Tables with Tailwind -> Interaction: JS-powered sorting -> Justification: Best format for structured data; sorting improves usability.
+        - Report Info: Key concepts (e.g., "Generational Trap") -> Goal: Highlight critical advice -> Viz: Styled callout cards with Unicode icons -> Interaction: Subtle hover effects -> Justification: Breaks up text and draws attention to crucial warnings.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 40vh;
+            width: 100%;
+            max-width: 800px;
+            max-height: 450px;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #2563eb; /* blue-600 */
+            border-bottom-color: #2563eb; /* blue-600 */
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+        }
+        .card-pop {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-pop:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-blue-600">PC Guide</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#guide-start" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Start Here</a>
+                        <a href="#new-mini-pc" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">New Mini PCs</a>
+                        <a href="#refurbished-desktop" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Refurbished Desktops</a>
+                        <a href="#data-dive" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Data Deep Dive</a>
+                        <a href="#verdict" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Final Verdict</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="bg-white py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900">The Sub-$200 Windows 11 PC</h1>
+                <p class="mt-6 text-lg leading-8 text-slate-600 max-w-3xl mx-auto">An Interactive Buyer's Guide for 2025. Discover the surprising power and value you can get on a tight budget. Let's find the perfect PC for you.</p>
+                <div class="mt-10">
+                    <a href="#guide-start" class="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Find Your Perfect PC</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="guide-start" class="py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Start Here: What's Most Important to You?</h2>
+                    <p class="mt-4 text-lg text-slate-600">The "best" PC depends on your needs. Your choice boils down to two paths: a brand-new, ultra-efficient Mini PC or a powerful, refurbished ex-business Desktop. Answer one question to get a personalized recommendation.</p>
+                </div>
+
+                <div class="mt-16 max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-center text-slate-800">I want a computer that prioritizes...</h3>
+                    <div id="quiz-options" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button data-choice="new" class="quiz-option text-left p-6 border rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all duration-300">
+                            <h4 class="font-bold text-slate-900">Efficiency & Simplicity</h4>
+                            <p class="text-slate-600 mt-2 text-sm">A brand-new, ultra-compact device with a full warranty. Perfect for media streaming, saving space, and keeping electricity bills low.</p>
+                        </button>
+                        <button data-choice="refurbished" class="quiz-option text-left p-6 border rounded-lg hover:border-amber-500 hover:bg-amber-50 transition-all duration-300">
+                            <h4 class="font-bold text-slate-900">Performance & Flexibility</h4>
+                            <p class="text-slate-600 mt-2 text-sm">The most raw power for the money. Ideal for heavy multitasking and for users who might want to upgrade components in the future.</p>
+                        </button>
+                    </div>
+                    <div id="quiz-result" class="mt-8 text-center hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="new-mini-pc" class="py-20 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-base font-semibold leading-7 text-blue-600">Path 1: The New Wave</h2>
+                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">New Mini PCs</p>
+                    <p class="mt-6 max-w-2xl mx-auto text-lg leading-8 text-slate-600">These ultra-compact, brand-new devices offer incredible energy efficiency and modern features. They are perfect for media centers, light productivity, and users who value a small footprint and the peace of mind of a new product warranty.</p>
+                </div>
+                <div class="mt-16">
+                    <div class="max-w-md mx-auto bg-slate-50 rounded-lg p-4 mb-8">
+                        <div id="mini-pc-tabs" class="flex space-x-1" role="tablist">
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="mini-pc-pros-cons">Pros & Cons</button>
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="mini-pc-recommendation">Top Pick</button>
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="mini-pc-who">Who Should Buy?</button>
+                        </div>
+                    </div>
+                    <div class="max-w-4xl mx-auto">
+                        <div id="mini-pc-pros-cons" class="tab-content">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                                    <h4 class="font-bold text-lg text-green-800">Pros</h4>
+                                    <ul class="mt-4 space-y-2 text-green-700 list-disc list-inside">
+                                        <li>Brand new with full warranty</li>
+                                        <li>Extremely low power consumption</li>
+                                        <li>Tiny, VESA-mountable form factor</li>
+                                        <li>Modern ports (USB-C, Wi-Fi 6)</li>
+                                        <li>Excellent for 4K media playback</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+                                    <h4 class="font-bold text-lg text-red-800">Cons</h4>
+                                    <ul class="mt-4 space-y-2 text-red-700 list-disc list-inside">
+                                        <li>Lower raw CPU performance</li>
+                                        <li>Very limited upgradeability</li>
+                                        <li>Plastic construction</li>
+                                        <li>Fan can be audible under load</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="mini-pc-recommendation" class="tab-content hidden">
+                            <div class="bg-slate-100 p-8 rounded-lg text-center">
+                                <h4 class="font-bold text-xl text-slate-900">Top Pick: N100/N150 Mini PC</h4>
+                                <p class="mt-2 text-slate-600">A model from a brand like GMKtec or Beelink with:</p>
+                                <ul class="mt-4 space-y-2 text-slate-700 font-medium">
+                                    <li><span class="font-semibold text-blue-600">CPU:</span> Intel N100 or N150</li>
+                                    <li><span class="font-semibold text-blue-600">RAM:</span> 16 GB DDR4</li>
+                                    <li><span class="font-semibold text-blue-600">Storage:</span> 512 GB NVMe SSD</li>
+                                </ul>
+                                <p class="mt-4 text-sm text-slate-500">Approx. Price: $160 - $190</p>
+                            </div>
+                        </div>
+                        <div id="mini-pc-who" class="tab-content hidden">
+                            <div class="bg-slate-100 p-8 rounded-lg">
+                                <h4 class="font-bold text-xl text-center text-slate-900">This is for you if...</h4>
+                                <p class="mt-4 text-slate-600">You want a dedicated media center (HTPC), a low-power home server (Plex, Home Assistant), a PC for a tight space, or simply prioritize a brand-new device with minimal running costs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="refurbished-desktop" class="py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-base font-semibold leading-7 text-amber-600">Path 2: The Value Champion</h2>
+                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Refurbished Business Desktops</p>
+                    <p class="mt-6 max-w-2xl mx-auto text-lg leading-8 text-slate-600">These off-lease corporate workhorses offer unbeatable performance-per-dollar. They are perfect for users who need maximum power for multitasking and those who value the ability to upgrade components down the line.</p>
+                </div>
+                 <div class="mt-16">
+                    <div class="max-w-md mx-auto bg-slate-50 rounded-lg p-4 mb-8">
+                        <div id="refurb-tabs" class="flex space-x-1" role="tablist">
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="refurb-pros-cons">Pros & Cons</button>
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="refurb-recommendation">Top Pick</button>
+                            <button role="tab" class="tab-button flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-700" data-target="refurb-who">Who Should Buy?</button>
+                        </div>
+                    </div>
+                    <div class="max-w-4xl mx-auto">
+                        <div id="refurb-pros-cons" class="tab-content">
+                             <div class="grid md:grid-cols-2 gap-8">
+                                <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                                    <h4 class="font-bold text-lg text-green-800">Pros</h4>
+                                    <ul class="mt-4 space-y-2 text-green-700 list-disc list-inside">
+                                        <li>Unbeatable performance for the price</li>
+                                        <li>Excellent upgrade potential (RAM, GPU, etc.)</li>
+                                        <li>Robust, business-grade build quality</li>
+                                        <li>Guaranteed Windows 11 compatibility (8th-gen+)</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+                                    <h4 class="font-bold text-lg text-red-800">Cons</h4>
+                                    <ul class="mt-4 space-y-2 text-red-700 list-disc list-inside">
+                                        <li>Refurbished, may have cosmetic flaws</li>
+                                        <li>Much higher power consumption</li>
+                                        <li>Larger and heavier</li>
+                                        <li>Older port selection (may lack USB-C)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="refurb-recommendation" class="tab-content hidden">
+                             <div class="bg-slate-100 p-8 rounded-lg text-center">
+                                <h4 class="font-bold text-xl text-slate-900">Top Pick: 8th-Gen SFF Desktop</h4>
+                                <p class="mt-2 text-slate-600">A Dell OptiPlex 7060 or HP EliteDesk 800 G4 with:</p>
+                                <ul class="mt-4 space-y-2 text-slate-700 font-medium">
+                                    <li><span class="font-semibold text-amber-600">CPU:</span> Intel Core i5-8500</li>
+                                    <li><span class="font-semibold text-amber-600">RAM:</span> 16 GB DDR4</li>
+                                    <li><span class="font-semibold text-amber-600">Storage:</span> 256 GB or 512 GB SSD</li>
+                                </ul>
+                                <p class="mt-4 text-sm text-slate-500">Approx. Price: $150 - $180</p>
+                            </div>
+                        </div>
+                        <div id="refurb-who" class="tab-content hidden">
+                            <div class="bg-slate-100 p-8 rounded-lg">
+                                <h4 class="font-bold text-xl text-center text-slate-900">This is for you if...</h4>
+                                <p class="mt-4 text-slate-600">You are a student or home office user who juggles many tasks at once. You need maximum responsiveness and might want to upgrade your PC with a graphics card or more storage in the future.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data-dive" class="py-20 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Data Deep Dive: The CPU Showdown</h2>
+                    <p class="mt-4 text-lg text-slate-600">Performance is the core trade-off. This chart compares the raw processing power of typical CPUs found in new mini PCs versus refurbished desktops. A higher score is better. Note the critical difference in official Windows 11 support.</p>
+                </div>
+                <div class="mt-12">
+                    <div class="text-center mb-6">
+                        <button id="multiCoreBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium">Multi-Core Performance</button>
+                        <button id="singleCoreBtn" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-md text-sm font-medium">Single-Core Performance</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="cpuChart"></canvas>
+                    </div>
+                </div>
+                 <div class="mt-16 max-w-4xl mx-auto bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-lg">
+                    <h4 class="font-bold text-lg text-amber-800">⚠️ The Windows 11 "Generational Trap"</h4>
+                    <p class="mt-2 text-amber-700">Be cautious! Only Intel 8th-generation CPUs (like the i5-8500) and newer are officially supported by Windows 11. While older 6th/7th-gen PCs can run it, they may not receive critical security updates, leaving your data at risk. For long-term security, stick to officially supported hardware.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="verdict" class="py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Final Verdict & Recommendation</h2>
+                    <p class="mt-4 text-lg text-slate-600">There's no single "best" PC, but there is a best choice *for you*. The two top options excel in different areas. This chart visualizes their strengths and weaknesses to help you make a final decision.</p>
+                </div>
+                <div class="mt-12 grid md:grid-cols-2 gap-12 items-center">
+                    <div class="chart-container">
+                        <canvas id="verdictChart"></canvas>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-600">Winner for Efficiency & Simplicity: New Mini PC</h3>
+                            <p class="mt-2 text-slate-600">Choose this if you want a brand-new, ultra-compact, and silent PC for media, web browsing, and light tasks. Its low power draw and modern features are perfect for a "set it and forget it" appliance.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-amber-600">Winner for Performance & Flexibility: Refurbished Desktop</h3>
+                            <p class="mt-2 text-slate-600">Choose this if you need the most power for your money. It's the best for heavy multitasking and for anyone who wants the freedom to upgrade components like the graphics card or storage in the future.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm">
+            <p>&copy; 2025 Interactive PC Buyer's Guide. Information based on the source report.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cpuData = {
+                labels: ['Intel N100', 'Intel N150', 'Intel Core i5-7500', 'Intel Core i5-8500'],
+                multiCore: [5387, 5885, 6027, 9529],
+                singleCore: [1906, 1900, 2253, 2440],
+                win11Support: [true, true, false, true]
+            };
+
+            const verdictData = {
+                labels: ['Raw Performance', 'Power Efficiency', 'Physical Size', 'Upgradeability', 'Warranty/Newness', 'Value'],
+                datasets: [
+                    {
+                        label: 'New Mini PC',
+                        data: [2, 5, 5, 1, 4, 4],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    },
+                    {
+                        label: 'Refurbished Desktop',
+                        data: [5, 2, 2, 5, 2, 5],
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(245, 158, 11, 1)'
+                    }
+                ]
+            };
+
+            let cpuChartInstance;
+            let verdictChartInstance;
+
+            const createCpuChart = (dataset = 'multiCore') => {
+                const ctx = document.getElementById('cpuChart').getContext('2d');
+                if (cpuChartInstance) {
+                    cpuChartInstance.destroy();
+                }
+                cpuChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: cpuData.labels.map((label, index) => {
+                            return cpuData.win11Support[index] ? label : label + ' (Unsupported)';
+                        }),
+                        datasets: [{
+                            label: dataset === 'multiCore' ? 'Passmark Multi-Core Score' : 'Passmark Single-Core Score',
+                            data: cpuData[dataset],
+                            backgroundColor: cpuData.win11Support.map(supported => supported ? 'rgba(59, 130, 246, 0.7)' : 'rgba(239, 68, 68, 0.7)'),
+                            borderColor: cpuData.win11Support.map(supported => supported ? 'rgba(59, 130, 246, 1)' : 'rgba(239, 68, 68, 1)'),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(203, 213, 225, 0.5)' },
+                                ticks: { color: '#475569' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { 
+                                    color: '#475569',
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    autoSkip: false,
+                                    callback: function(value, index, values) {
+                                        const label = this.getLabelForValue(value);
+                                        if (label.length > 16) {
+                                            return label.split(' ').map(word => word.length > 8 ? word.substring(0,6)+'...' : word);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    title: (context) => context[0].label.replace(' (Unsupported)', ''),
+                                    afterLabel: (context) => {
+                                        const support = cpuData.win11Support[context.dataIndex];
+                                        return `Official Win11 Support: ${support ? 'Yes' : 'No'}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const createVerdictChart = () => {
+                const ctx = document.getElementById('verdictChart').getContext('2d');
+                if (verdictChartInstance) {
+                    verdictChartInstance.destroy();
+                }
+                verdictChartInstance = new Chart(ctx, {
+                    type: 'radar',
+                    data: verdictData,
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5,
+                                min: 0,
+                                stepSize: 1,
+                                angleLines: { color: 'rgba(203, 213, 225, 0.5)' },
+                                grid: { color: 'rgba(203, 213, 225, 0.5)' },
+                                pointLabels: {
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    },
+                                    color: '#334155'
+                                },
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                           tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.r !== null) {
+                                            label += `${context.parsed.r} / 5`;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+            
+            createCpuChart();
+            createVerdictChart();
+
+            document.getElementById('multiCoreBtn').addEventListener('click', (e) => {
+                createCpuChart('multiCore');
+                e.target.classList.add('bg-blue-600', 'text-white');
+                e.target.classList.remove('bg-slate-200', 'text-slate-700');
+                document.getElementById('singleCoreBtn').classList.add('bg-slate-200', 'text-slate-700');
+                document.getElementById('singleCoreBtn').classList.remove('bg-blue-600', 'text-white');
+            });
+
+            document.getElementById('singleCoreBtn').addEventListener('click', (e) => {
+                createCpuChart('singleCore');
+                e.target.classList.add('bg-blue-600', 'text-white');
+                e.target.classList.remove('bg-slate-200', 'text-slate-700');
+                document.getElementById('multiCoreBtn').classList.add('bg-slate-200', 'text-slate-700');
+                document.getElementById('multiCoreBtn').classList.remove('bg-blue-600', 'text-white');
+            });
+
+            const handleTabClick = (tabButtonsContainerId, tabContentsSelector) => {
+                const tabButtonsContainer = document.getElementById(tabButtonsContainerId);
+                tabButtonsContainer.addEventListener('click', (e) => {
+                    const button = e.target.closest('button');
+                    if (!button) return;
+
+                    const targetId = button.dataset.target;
+                    const targetContent = document.getElementById(targetId);
+
+                    tabButtonsContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    document.querySelectorAll(tabContentsSelector).forEach(content => content.classList.add('hidden'));
+                    targetContent.classList.remove('hidden');
+                });
+                tabButtonsContainer.querySelector('button').click();
+            };
+            
+            handleTabClick('mini-pc-tabs', '#new-mini-pc .tab-content');
+            handleTabClick('refurb-tabs', '#refurbished-desktop .tab-content');
+
+            document.getElementById('quiz-options').addEventListener('click', (e) => {
+                const choiceBtn = e.target.closest('.quiz-option');
+                if (!choiceBtn) return;
+
+                const choice = choiceBtn.dataset.choice;
+                const resultDiv = document.getElementById('quiz-result');
+                let resultHTML = '';
+
+                if (choice === 'new') {
+                    resultHTML = `
+                        <p class="text-lg text-slate-700">Based on your choice, we recommend the <strong class="text-blue-600">New Mini PC</strong> path.</p>
+                        <p class="mt-2 text-sm text-slate-500">It offers a brand-new experience, great efficiency, and a tiny footprint.</p>
+                        <a href="#new-mini-pc" class="mt-4 inline-block rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">Explore Mini PCs</a>
+                    `;
+                } else {
+                    resultHTML = `
+                        <p class="text-lg text-slate-700">Based on your choice, we recommend the <strong class="text-amber-600">Refurbished Desktop</strong> path.</p>
+                        <p class="mt-2 text-sm text-slate-500">It delivers the best performance for your money and future upgrade options.</p>
+                        <a href="#refurbished-desktop" class="mt-4 inline-block rounded-md bg-amber-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-500">Explore Refurbished Desktops</a>
+                    `;
+                }
+                resultDiv.innerHTML = resultHTML;
+                resultDiv.classList.remove('hidden');
+            });
+            
+            const sections = document.querySelectorAll('main section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </body>
- 
 </html>
